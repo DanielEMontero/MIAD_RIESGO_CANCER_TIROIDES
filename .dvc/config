@@ -1,0 +1,4 @@
+[core]
+    remote = bucket_proyecto
+['remote "bucket_proyecto"']
+    url = s3://miad-riesgo-cancer-tiroides
