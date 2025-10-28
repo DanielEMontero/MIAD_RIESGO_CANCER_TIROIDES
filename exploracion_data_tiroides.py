@@ -59,38 +59,12 @@ fig.suptitle("Gráficos Variables Predictoras", fontsize=18, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])
 plt.show()
 
-# Histogramas y boxplot entre cada variable predictora y la variable de respuesta (Y)
-# Filtrar variables numéricas y categóricas
-xTotal_numeric = xTotal.select_dtypes(include=['number'])  # Solo numéricas
-categorical_cols = xTotal.select_dtypes(include=['object']).columns.tolist()  # Solo categóricas
-
-# Contar total de variables
-num_predictors = len(xTotal_numeric.columns) + len(categorical_cols)
-num_rows = int(np.ceil(num_predictors / 3))  # Organizar en 3 columnas
-
-# Crear la figura
-fig, axes = plt.subplots(num_rows, 3, figsize=(18, 5 * num_rows))
-axes = axes.flatten()
-
-# Generar gráficos para variables numéricas (Correlogramas)
-for i, col in enumerate(xTotal_numeric.columns):
-    sns.histplot(data=dfWork, x=col, hue=VarResp, kde=True, bins=30, palette="coolwarm", ax=axes[i])
-    axes[i].set_title(f"Histograma: {col} vs {VarResp}", fontsize=12)
-    axes[i].set_xlabel(col, fontsize=10)
-    axes[i].set_ylabel("Frecuencia", fontsize=10)
-
-# Generar gráficos de barras y tablas de frecuencias para variables categóricas
-for j, col in enumerate(categorical_cols, start=i + 1):
-    sns.countplot(data=dfWork, x=col, hue=VarResp, palette="coolwarm", ax=axes[j])
-    axes[j].set_title(f"Distribución de {col} según {VarResp}", fontsize=12)
-    axes[j].set_xlabel(col, fontsize=10)
-    axes[j].set_ylabel("Frecuencia", fontsize=10)
-    axes[j].tick_params(axis='x', rotation=30)  # Rotar etiquetas si hay muchas categorías
-
-# Ocultar gráficos vacíos si el número de variables no es múltiplo de 3
-for k in range(j + 1, len(axes)):
-    fig.delaxes(axes[k])
-
-plt.suptitle(f"Histogramas y Gráficos de barras de Variables Predictoras vs Variable de Respuesta ({VarResp})", fontsize=16, fontweight='bold')
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+ # Pie para la variable de respuesta
+plt.figure(figsize=(6, 6))
+data_counts = yTotal.value_counts()  # Contar la cantidad de 0s y 1s en 'Direction'
+plt.pie(data_counts, labels=data_counts.index, autopct='%1.1f%%', colors=["green", "red"])
+plt.title(f'Distribución de la Variable de Respuesta ({VarResp})', fontsize=16, fontweight='bold')
 plt.show()
+
+print(yTotal.value_counts(normalize=True))  # Proporciones de cada clase
+print(yTotal.value_counts())  # Datos de cada clase
