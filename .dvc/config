@@ -1,4 +1,7 @@
 [core]
-    remote = bucket_proyecto
+    remote = s3store
 ['remote "bucket_proyecto"']
     url = s3://miad-riesgo-cancer-tiroides
+['remote "s3store"']
+    url = s3://miad-cancer-tiroides
+    endpointurl = https://s3.amazonaws.com

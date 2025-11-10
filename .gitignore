@@ -1,19 +1,27 @@
-# ==========================
-# CARPETA DATA
-# ==========================
-# Ignorar todo en data
-data/
+# ============================
+# CARPETA DATA (con DVC)
+# ============================
 
-# PERMITIR el marcador y/o README dentro de data
+# Ignorar todo el contenido de datos sensibles o pesados
+*.csv
+*.xlsx
+*.sav
+*.json
+
+# Ignorar todo lo de data
+!data/*.dvc
+
+# EXCEPCIONES: permitir .dvc y archivos marcador
 !data/.gitkeep
 !data/README.md
+!data/*.dvc
 
 
-# ==========================
+# ============================
 # ARCHIVOS Y CARPETAS DE PYTHON
-# ==========================
+# ============================
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
 *.pkl
@@ -21,27 +29,18 @@ __pycache__/
 *.bak
 *.tmp
 
-# ==========================
+# ============================
 # MODELOS Y REGISTROS
-# ==========================
+# ============================
 mlruns/
 models/
 *.png
 *.jpg
 *.jpeg
 
-# ==========================
-# DATOS LOCALES O PRIVADOS
-# ==========================
-data/
-*.csv
-*.xlsx
-*.sav
-*.json
-
-# ==========================
-# ENTORNOS VIRTUALES Y CONFIGURACIÓN LOCAL
-# ==========================
+# ============================
+# ENTORNOS VIRTUALES Y CONFIG LOCAL
+# ============================
 .venv/
 env/
 venv/
@@ -53,8 +52,9 @@ Thumbs.db
 .idea/
 .vscode/
 
-# ==========================
+# ============================
 # ARCHIVOS TEMPORALES DE WINDOWS Y MAC
-# ==========================
+# ============================
 ehthumbs.db
 desktop.ini
+
