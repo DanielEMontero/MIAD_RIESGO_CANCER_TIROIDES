@@ -1,1 +1,6 @@
+# Ignorar todo en data
 data/
+
+# PERMITIR el marcador y/o README dentro de data
+!data/.gitkeep
+!data/README.md
