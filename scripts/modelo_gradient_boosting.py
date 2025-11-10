@@ -13,12 +13,14 @@ import mlflow.sklearn
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
 from preparar_datos_utils import preparar_datos
 from sklearn.ensemble import GradientBoostingClassifier
 
 # Preparar datos
-file_path = "thyroid_cancer_risk_data.csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(BASE_DIR, "..", "data", "thyroid_cancer_risk_data.csv")
 var_objetivo = "Diagnosis"
 modelo, xTrain, xTest, yTrain, yTest = preparar_datos(file_path, var_objetivo, graficar=False)
 
