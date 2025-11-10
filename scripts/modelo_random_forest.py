@@ -17,8 +17,13 @@ import pandas as pd
 from preparar_datos_utils import preparar_datos
 from sklearn.ensemble import RandomForestClassifier
 
+import os
+
+
+
 # Preparar datos
-file_path = "../data/thyroid_cancer_risk_data.csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(BASE_DIR, "..", "data", "thyroid_cancer_risk_data.csv")
 var_objetivo = "Diagnosis"
 modelo, xTrain, xTest, yTrain, yTest = preparar_datos(file_path, var_objetivo, graficar=False)
 
