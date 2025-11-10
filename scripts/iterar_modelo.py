@@ -13,7 +13,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from ydata_profiling import ProfileReport
 from scipy.stats import zscore, wasserstein_distance
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
@@ -55,12 +54,6 @@ class IterarModelo:
         # Revisar tipos de datos
         print("\n\033[1m Tipos de datos en el dataset: \033[0m")
         print(df.dtypes)
-    
-    def reporte (self, df, nom_rep = "reporte_perfilamiento.html"):
-        # Generar reporte exploratorio
-        profile = ProfileReport(df, explorative=True)
-        profile.to_file(nom_rep)
-        print(f"Reporte guardado como {nom_rep}")
         
     def graf_set(self, df, colsGrid=5, titGraf="Gráficos de Variables"):
         # Función para graficar un set de datos
