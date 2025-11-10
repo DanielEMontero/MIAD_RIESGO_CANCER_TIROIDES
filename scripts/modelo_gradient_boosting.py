@@ -13,10 +13,11 @@ import mlflow.sklearn
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-import os
 
 from preparar_datos_utils import preparar_datos
 from sklearn.ensemble import GradientBoostingClassifier
+import os
+
 
 # Preparar datos
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -59,3 +60,4 @@ with mlflow.start_run(experiment_id=experiment.experiment_id, run_name="Gradient
 
 
 print("\n\033[1m🔹 Gradient Boosting con selección de variables (RFE): \033[0m")
+
