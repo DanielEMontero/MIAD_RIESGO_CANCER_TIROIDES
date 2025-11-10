@@ -1,6 +1,60 @@
+# ==========================
+# CARPETA DATA
+# ==========================
 # Ignorar todo en data
 data/
 
 # PERMITIR el marcador y/o README dentro de data
 !data/.gitkeep
 !data/README.md
+
+
+# ==========================
+# ARCHIVOS Y CARPETAS DE PYTHON
+# ==========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.log
+*.bak
+*.tmp
+
+# ==========================
+# MODELOS Y REGISTROS
+# ==========================
+mlruns/
+models/
+*.png
+*.jpg
+*.jpeg
+
+# ==========================
+# DATOS LOCALES O PRIVADOS
+# ==========================
+data/
+*.csv
+*.xlsx
+*.sav
+*.json
+
+# ==========================
+# ENTORNOS VIRTUALES Y CONFIGURACIÓN LOCAL
+# ==========================
+.venv/
+env/
+venv/
+.conda/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+*.code-workspace
+.idea/
+.vscode/
+
+# ==========================
+# ARCHIVOS TEMPORALES DE WINDOWS Y MAC
+# ==========================
+ehthumbs.db
+desktop.ini
