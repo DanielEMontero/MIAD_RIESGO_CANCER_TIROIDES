@@ -24,12 +24,15 @@ try:
 except ImportError:
     display = print
 
-def preparar_datos(file_path, var_objetivo, graficar=True):
+def preparar_datos(file_path, var_objetivo, graficar=True, explorar=True):
     modelo = IterarModelo(file_path, var_objetivo)
     
     # CARGAR Y EXPLORAR
     dfTotal = modelo.dfTotal.copy()                     # Extraer los dataframe
-    modelo.explora_ini(dfTotal)                         # Exploracion inicial
+    
+    if explorar:
+        modelo.explora_ini(dfTotal)                     # Exploracion inicial
+        
     modelo.detectar_columnas_no_numericas(dfTotal)      # Detectar columnas con valores no numéricos
     modelo.valores_nulos(dfTotal)                       # Verificar valores nulos
     modelo.detectar_valores_mixtos(dfTotal)             # Detectar valores mixtos en columnas
@@ -84,7 +87,8 @@ def preparar_datos(file_path, var_objetivo, graficar=True):
         if col in dfTotal.columns:
             dfTotal[col] = dfTotal[col].replace(mapping)
     
-    modelo.explora_ini(dfTotal)                     # Exploracion inicial
+    if explorar:
+        modelo.explora_ini(dfTotal)                     # Exploracion inicial
     
     # LIMPIEZA BÁSICA
     dfTotal.dropna(subset=[var_objetivo], inplace=True)     # Eliminar filas con valores nulos en la variable objetivo
@@ -105,7 +109,9 @@ def preparar_datos(file_path, var_objetivo, graficar=True):
     xTrain_numeric = xTrain.select_dtypes(include=['number'])  # Solo numéricas
     xTest_numeric = xTest.select_dtypes(include=['number'])  # Solo numéricas
     categorical_cols = xTrain.select_dtypes(include=['object']).columns.tolist()  # Solo categóricas
-    modelo.visualizar_outliers(xTrain_numeric, "Outliers Originales")
+    
+    if graficar:
+        modelo.visualizar_outliers(xTrain_numeric, "Outliers Originales")
     
     # Normalizar variables
     scaler = StandardScaler()
@@ -129,8 +135,9 @@ def preparar_datos(file_path, var_objetivo, graficar=True):
         scaler.transform(xTest_numeric),
         columns=xTest_numeric.columns,
         index=xTest.index)
-
-    modelo.visualizar_outliers(xTrain_nscaled, "Outliers despues de normalización")
+    
+    if graficar:
+        modelo.visualizar_outliers(xTrain_nscaled, "Outliers despues de normalización")
 
     # Actualizar los dataframe
     xTrain_scaled.update(xTrain_nscaled)

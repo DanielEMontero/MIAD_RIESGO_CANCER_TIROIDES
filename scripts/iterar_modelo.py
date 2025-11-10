@@ -122,7 +122,7 @@ class IterarModelo:
             fig.title(titGraf, fontsize=16, fontweight='bold')
             fig.xlabel("Clases")
             fig.ylabel("Frecuencia")
-            fig.xticks(rotation=75)
+            plt.xticks(rotation=75)
             fig.grid(axis='y', linestyle='--', alpha=0.6)
         else:
             # Histograma con umbral opcional
@@ -253,11 +253,12 @@ class IterarModelo:
         # Mostrar cuántos outliers tiene cada columna
         print("\n Valores extremos con Z-score:\n")
         print(outliers_zscore.sum())
-
+        
+        
         # Gráficos de Boxplot (para ver outliers)
         fig = plt.figure(figsize=(12, 6))
         sns.boxplot(data=df.select_dtypes(include=[np.number]))
-        fig.xticks(rotation=90)
+        plt.xticks(rotation=90)
         fig.title(titGraf)
         #plt.show()
         fig.tight_layout()
@@ -347,7 +348,7 @@ class IterarModelo:
         fig = plt.figure(figsize=(10, 5))
         sns.lineplot(data=df_resultados, x="max_iter", y="Distancia", marker="o", color="red", label="Distancia")
 
-        fig.xticks(range(10, 110, 10))
+        plt.xticks(range(10, 110, 10))
         fig.xlabel("max_iter")
         fig.ylabel("Distancia de Wasserstein")
         fig.title("Evolución de la imputación según max_iter")
@@ -490,7 +491,7 @@ class IterarModelo:
         fig.title("Comparación de Importancia de Variables (Antes vs. Después de la Transformación)")
         fig.xlabel("Variables")
         fig.ylabel("Importancia")
-        fig.xticks(rotation=75)
+        plt.xticks(rotation=75)
         fig.legend(["Antes", "Después"])
         fig.grid(axis='y', linestyle='--', alpha=0.6)
         #plt.show()
@@ -555,7 +556,7 @@ class IterarModelo:
         
         return xSet_res, ySet_res
         
-    def eval_model_clasif_test(self, model, model_name, xSet_Train, ySet_Train, xSet_Test, ySet_Test):
+    def eval_model_clasif_test(self, model, model_name, xSet_Train, ySet_Train, xSet_Test, ySet_Test, graficar=True):
         # Función para entrenar y evaluar modelos en problemas multiclase
 
         # 1. Entrenar el modelo
@@ -598,21 +599,22 @@ class IterarModelo:
         df_conf_matrix = pd.DataFrame(conf_matrix, 
                                       index=[f"Real {cls}" for cls in clases_unicas], 
                                       columns=[f"Pred {cls}" for cls in clases_unicas])
-
-        # 7. Graficar matriz de confusión
-        fig = plt.figure(figsize=(8, 6))
-        sns.heatmap(df_conf_matrix, annot=True, fmt="d", cmap="Blues", linewidths=0.5)
-        fig.xlabel("Predicción")
-        fig.ylabel("Realidad")
-        fig.title(f"Matriz de Confusión - {model_name}")
-        #plt.show()
-        fig.tight_layout()
-        fig.savefig(f"{model_name}_confusion.png")
-        try:
-            mlflow.log_artifact(f"{model_name}_confusion.png")
-        except Exception as e:
-            print(f"[MLflow] No se pudo registrar artefacto ({model_name}): {e}")
-        plt.close(fig)
+        
+        if graficar:
+            # 7. Graficar matriz de confusión
+            fig = plt.figure(figsize=(8, 6))
+            sns.heatmap(df_conf_matrix, annot=True, fmt="d", cmap="Blues", linewidths=0.5)
+            fig.xlabel("Predicción")
+            fig.ylabel("Realidad")
+            fig.title(f"Matriz de Confusión - {model_name}")
+            #plt.show()
+            fig.tight_layout()
+            fig.savefig(f"{model_name}_confusion.png")
+            try:
+                mlflow.log_artifact(f"{model_name}_confusion.png")
+            except Exception as e:
+                print(f"[MLflow] No se pudo registrar artefacto ({model_name}): {e}")
+            plt.close(fig)
 
         # 8. Cálculo del AUC y la curva ROC
         if es_binario:
@@ -643,54 +645,57 @@ class IterarModelo:
         print(f"\n\033[1m Matriz de Confusión modelo - {model_name}: \033[0m")
         display(df_conf_matrix)
         
-        # 11. Graficar curva ROC
-        fig = plt.figure(figsize=(6, 5))
-        fig.plot(fpr, tpr, 'b', label=f'AUC = {auc_macro:.2f}')
-        fig.legend(loc='lower right')
-        fig.plot([0, 1], [0, 1], 'r--')  # Línea de referencia (azar)
-        fig.xlim([-0.01, 1])
-        fig.ylim([0, 1.05])
-        fig.ylabel('Tasa de Verdaderos Positivos (TPR)')
-        fig.xlabel('Tasa de Falsos Positivos (FPR)')
-        fig.title(f'Curva ROC - {model_name}')
-        fig.grid()
-        #plt.show()
-        fig.tight_layout()
-        fig.savefig(f"{model_name}_ROC.png")
-        try:
-            mlflow.log_artifact(f"{model_name}_ROC.png")
-        except Exception as e:
-            print(f"[MLflow] No se pudo registrar artefacto ({model_name}): {e}")
-        plt.close(fig)
+        if graficar:
+            # 11. Graficar curva ROC
+            fig = plt.figure(figsize=(6, 5))
+            fig.plot(fpr, tpr, 'b', label=f'AUC = {auc_macro:.2f}')
+            fig.legend(loc='lower right')
+            fig.plot([0, 1], [0, 1], 'r--')  # Línea de referencia (azar)
+            fig.xlim([-0.01, 1])
+            fig.ylim([0, 1.05])
+            fig.ylabel('Tasa de Verdaderos Positivos (TPR)')
+            fig.xlabel('Tasa de Falsos Positivos (FPR)')
+            fig.title(f'Curva ROC - {model_name}')
+            fig.grid()
+            #plt.show()
+            fig.tight_layout()
+            fig.savefig(f"{model_name}_ROC.png")
+            try:
+                mlflow.log_artifact(f"{model_name}_ROC.png")
+            except Exception as e:
+                print(f"[MLflow] No se pudo registrar artefacto ({model_name}): {e}")
+            plt.close(fig)
         
         # 12. Graficar métricas
         metricas = {"Accuracy": accuracy, "Precision": precision, "Recall": recall, "F1-Score": f1, "AUC": auc_macro}
         
-        fig = plt.figure(figsize=(8, 6))
-        bars = plt.bar(metricas.keys(), metricas.values(), color=["blue", "orange", "green", "red", "purple"])
+        if graficar:
+            fig = plt.figure(figsize=(8, 6))
+            bars = plt.bar(metricas.keys(), metricas.values(), color=["blue", "orange", "green", "red", "purple"])
+            
+            # Agregar etiquetas de valores sobre cada barra
+            for bar in bars:
+                height = bar.get_height()
+                fig.text(bar.get_x() + bar.get_width()/2, height, f'{height:.3f}', 
+                         ha='center', va='bottom', fontsize=12, fontweight='bold')
+            
+            # Personalizar gráfico
+            fig.ylim(0, 1)  # Rango de 0 a 1 porque son métricas de clasificación
+            fig.xlabel("Métrica")
+            fig.ylabel("Valor")
+            fig.title(f"Métricas de desempeño - {model_name}")
+            fig.grid(axis='y', linestyle='--', alpha=0.6)
+            
+            #plt.show()
+            fig.tight_layout()
+            fig.savefig(f"{model_name}_desempenio.png")
+            try:
+                mlflow.log_artifact(f"{model_name}_desempenio.png")
+            except Exception as e:
+                print(f"[MLflow] No se pudo registrar artefacto ({model_name}): {e}")
+            
+            plt.close(fig)
         
-        # Agregar etiquetas de valores sobre cada barra
-        for bar in bars:
-            height = bar.get_height()
-            fig.text(bar.get_x() + bar.get_width()/2, height, f'{height:.3f}', 
-                     ha='center', va='bottom', fontsize=12, fontweight='bold')
-        
-        # Personalizar gráfico
-        fig.ylim(0, 1)  # Rango de 0 a 1 porque son métricas de clasificación
-        fig.xlabel("Métrica")
-        fig.ylabel("Valor")
-        fig.title(f"Métricas de desempeño - {model_name}")
-        fig.grid(axis='y', linestyle='--', alpha=0.6)
-        
-        #plt.show()
-        fig.tight_layout()
-        fig.savefig(f"{model_name}_desempenio.png")
-        try:
-            mlflow.log_artifact(f"{model_name}_desempenio.png")
-        except Exception as e:
-            print(f"[MLflow] No se pudo registrar artefacto ({model_name}): {e}")
-        
-        plt.close(fig)
         return model, metricas
         
     def afinar_modelo(self, model, xSet, ySet, scoring="roc_auc"):
@@ -702,13 +707,15 @@ class IterarModelo:
 
         print(f"\n AUC estimado en CV: {auc_scoresRF.mean():.4f} ± {auc_scoresRF.std():.4f}")
         
-    def ejecutar_modelo (self, xSet_Train, ySet_Train, xSet_Test, ySet_Test, model, modelName, imbalanceo=True):
+    def ejecutar_modelo (self, xSet_Train, ySet_Train, xSet_Test, ySet_Test, model, modelName, imbalanceo=True, graficar=True):
         if imbalanceo: 
             xSet_res, ySet_res = self.imbalanceo(xSet_Train, ySet_Train, 5)
         else:
             xSet_res, ySet_res = xSet_Train.copy(), ySet_Train.copy()
         
-        resMod = self.eval_model_clasif_test(model, modelName, xSet_res, ySet_res, xSet_Test, ySet_Test)
+        resMod = self.eval_model_clasif_test(
+            model, modelName, xSet_res, ySet_res, xSet_Test, ySet_Test, graficar
+            )
             
         return resMod
     
