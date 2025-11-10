@@ -58,3 +58,13 @@ for j in range(i + 1, len(axes)):
 fig.suptitle("Gráficos Variables Predictoras", fontsize=18, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])
 plt.show()
+
+ # Pie para la variable de respuesta
+plt.figure(figsize=(6, 6))
+data_counts = yTotal.value_counts()  # Contar la cantidad de 0s y 1s en 'Direction'
+plt.pie(data_counts, labels=data_counts.index, autopct='%1.1f%%', colors=["green", "red"])
+plt.title(f'Distribución de la Variable de Respuesta ({VarResp})', fontsize=16, fontweight='bold')
+plt.show()
+
+print(yTotal.value_counts(normalize=True))  # Proporciones de cada clase
+print(yTotal.value_counts())  # Datos de cada clase
