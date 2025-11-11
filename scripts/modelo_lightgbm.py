@@ -16,9 +16,12 @@ import pandas as pd
 import lightgbm as lgb
 
 from preparar_datos_utils import preparar_datos
-
+import os
+ 
+ 
 # Preparar datos
-file_path = "thyroid_cancer_risk_data.csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(BASE_DIR, "..", "data", "thyroid_cancer_risk_data.csv") 
 var_objetivo = "Diagnosis"
 modelo, xTrain, xTest, yTrain, yTest = preparar_datos(file_path, var_objetivo, graficar=False)
 
@@ -54,5 +57,6 @@ with mlflow.start_run(experiment_id=experiment.experiment_id, run_name="LightGBM
     plt.tight_layout()
     plt.savefig("metricas_lgbm.png")
     mlflow.log_artifact("metricas_lgbm.png")
+
 
     print("\n✅ Modelo LightGBM registrado en MLflow.")
