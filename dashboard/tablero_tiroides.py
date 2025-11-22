@@ -40,15 +40,14 @@ with col3:
     tam_nodulo = st.number_input("Tamaño del nódulo")
 
 if st.button("Analizar riesgo"):
-    # model = joblib.load("models/modelo_tiroides.pkl")
-    # X = np.array([[edad, 1 if sexo=="Femenino" else 0,
-    #                1 if obesidad=="Si" else 0,
-    #                1 if tabaquismo=="Si" else 0,
-    #                1 if diabetes=="Si" else 0,
-    #                t3, t4, tsh, tam_nodulo,
-    #                1 if antecedentes=="Si" else 0]])
-    # prob = model.predict_proba(X)[0][1]
-    prob = random.uniform(0, 1)  #Comentar esta línea cuando ya tengamos el .pkl
+    model = joblib.load("modelo_tiroides.pkl")
+    X = np.array([[edad, 1 if sexo=="Femenino" else 0,
+                   1 if obesidad=="Si" else 0,
+                   1 if tabaquismo=="Si" else 0,
+                   1 if diabetes=="Si" else 0,
+                   t3, t4, tsh, tam_nodulo,
+                   1 if antecedentes=="Si" else 0]])
+    prob = model.predict_proba(X)[0][1]
     resultado = "Maligno" if prob > 0.5 else "Benigno"
     st.write(f"**Resultado:** {resultado}  -  **Probabilidad:** {prob:.2%}")
 
