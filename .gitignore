@@ -1,1 +1,60 @@
-data/
+# ============================
+# CARPETA DATA (con DVC)
+# ============================
+
+# Ignorar todo el contenido de datos sensibles o pesados
+*.csv
+*.xlsx
+*.sav
+*.json
+
+# Ignorar todo lo de data
+!data/*.dvc
+
+# EXCEPCIONES: permitir .dvc y archivos marcador
+!data/.gitkeep
+!data/README.md
+!data/*.dvc
+
+
+# ============================
+# ARCHIVOS Y CARPETAS DE PYTHON
+# ============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.log
+*.bak
+*.tmp
+
+# ============================
+# MODELOS Y REGISTROS
+# ============================
+mlruns/
+models/
+*.png
+*.jpg
+*.jpeg
+
+# ============================
+# ENTORNOS VIRTUALES Y CONFIG LOCAL
+# ============================
+.venv/
+env/
+venv/
+.conda/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+*.code-workspace
+.idea/
+.vscode/
+
+# ============================
+# ARCHIVOS TEMPORALES DE WINDOWS Y MAC
+# ============================
+ehthumbs.db
+desktop.ini
+
