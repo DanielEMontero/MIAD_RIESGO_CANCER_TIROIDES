@@ -40,18 +40,50 @@ with col3:
     tam_nodulo = st.number_input("Tamaño del nódulo")
 
 if st.button("Analizar riesgo"):
-    model = joblib.load("dashboard/modelo_tiroides.pkl")
-    X = np.array([[edad, 1 if sexo=="Femenino" else 0,
-                   1 if obesidad=="Si" else 0,
-                   1 if tabaquismo=="Si" else 0,
-                   1 if diabetes=="Si" else 0,
-                   t3, t4, tsh, tam_nodulo,
-                   1 if antecedentes=="Si" else 0]])
+    model = joblib.load("modelo_tiroides.pkl")
+
+    # Variables del tablero (10 variables)
+    X_user = np.array([
+        edad,
+        t3,
+        tsh,
+        t4,
+        tam_nodulo,
+        1 if sexo=="Masculino" else 0,
+        1 if tabaquismo=="Si" else 0,
+        1 if obesidad=="Si" else 0,
+        1 if antecedentes=="Si" else 0,
+        1 if diabetes=="Si" else 0
+    ])
+
+    # Crear las 15 variables EXACTAS en el orden que el modelo espera
+    # Las faltantes se rellenan en cero
+    X = np.array([
+        edad,               # Edad
+        tsh,                # Nivel_TSH
+        t3,                 # Nivel_T3
+        t4,                 # Nivel_T4
+        tam_nodulo,         # Tamanio_Nodo
+        0,                  # Riesgo_Cancer_Tiroide (asumido 0)
+        1 if sexo=="Masculino" else 0,    # Genero_Masculino
+        0,                  # Pais_India (asumido 0)
+        0,                  # Etnicidad_Asiatico (asumido 0)
+        0,                  # Etnicidad_Caucasico (asumido 0)
+        1 if antecedentes=="Si" else 0,   # Historial_Familiar_Si
+        0,                  # Deficiencia_Vodo_Si (asumido 0)
+        1 if tabaquismo=="Si" else 0,     # Tabaquismo_Si
+        1 if obesidad=="Si" else 0,       # Obesidad_Si
+        1 if diabetes=="Si" else 0        # Diabetes_Si
+    ]).reshape(1,-1)
+
+    # Predicción
     prob = model.predict_proba(X)[0][1]
     resultado = "Maligno" if prob > 0.5 else "Benigno"
-    st.write(f"**Resultado:** {resultado}  -  **Probabilidad:** {prob:.2%}")
+
+    st.write(f"**Resultado:** {resultado}  —  **Probabilidad:** {prob:.2%}")
 
     if resultado == "Benigno":
         st.success("No se requiere biopsia inmediata")
     else:
         st.error("Requiere valoración médica prioritaria")
+
