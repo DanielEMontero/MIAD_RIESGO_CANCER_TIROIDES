@@ -25,4 +25,4 @@ modelo_entrenado, metricas = modelo.ejecutar_modelo(
     imbalanceo=False, graficar=False
 )
 
-joblib.dump(modelo_entrenado, "dashboard/modelo_tiroides.pkl")
+joblib.dump(modelo_entrenado, "../dashboard/modelo_tiroides.pkl")
