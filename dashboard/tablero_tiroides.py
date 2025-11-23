@@ -40,7 +40,7 @@ with col3:
     tam_nodulo = st.number_input("Tamaño del nódulo")
 
 if st.button("Analizar riesgo"):
-    model = joblib.load("modelo_tiroides.pkl")
+    model = joblib.load("dashboard/modelo_tiroides.pkl")
     X = np.array([[edad, 1 if sexo=="Femenino" else 0,
                    1 if obesidad=="Si" else 0,
                    1 if tabaquismo=="Si" else 0,
