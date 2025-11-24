@@ -6,7 +6,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 import joblib
 
 # Preparar datos
-file_path = "thyroid_cancer_risk_data.csv"
+file_path = "../data/thyroid_cancer_risk_data.csv"
 var_objetivo = "Diagnosis"
 modelo, xTrain, xTest, yTrain, yTest = preparar_datos(file_path, var_objetivo, graficar=False)
 
@@ -25,4 +25,4 @@ modelo_entrenado, metricas = modelo.ejecutar_modelo(
     imbalanceo=False, graficar=False
 )
 
-joblib.dump(modelo_entrenado, "dashboard/modelo_tiroides.pkl")
+joblib.dump(modelo_entrenado, "../dashboard/modelo_tiroides.pkl")
