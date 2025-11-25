@@ -2,6 +2,7 @@ import streamlit as st
 import joblib
 import numpy as np
 import random
+import requests
 
 
 st.markdown(
@@ -76,8 +77,16 @@ if st.button("Analizar riesgo"):
         1 if diabetes=="Si" else 0        # Diabetes_Si
     ]).reshape(1,-1)
 
-    # Predicción
-    prob = model.predict_proba(X)[0][1]
+    # Llamado a la API
+    url_api = "http://34.226.138.211:8001/predict"
+    response = requests.post(url_api, json=X.tolist())
+    
+    if response.status_code == 200:
+        prob = response.json()["probabilidad"]
+    else:
+        st.error("Error consultando la API")
+        st.stop()
+
     resultado = "Maligno" if prob > 0.5 else "Benigno"
 
     st.write(f"**Resultado:** {resultado}  —  **Probabilidad:** {prob:.2%}")
