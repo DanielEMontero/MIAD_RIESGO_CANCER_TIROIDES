@@ -92,8 +92,8 @@ ________________________________________________________________________________
 
 ### 5.3 Paraclínicos: 
 - Niveles Hormona estimulante de la tiroides de TSH (mIU/L): Se debe ingresa la concentración de hormona estimulante de la tiroides (TSH) en mili unidades internacionales por litro. Niveles anormales pueden indicar disfunción tiroidea y se relacionan con la presencia y comportamiento de nódulos. 
-- Niveles de la hormona triyodotironina T3 (ng/mL): Se deben ingresar los niveles de triyodotironina en sangre en nanogramos por mililitro. Es importante para evaluar el estado funcional de la glándula tiroides. 
-- Niveles de la hormona tiroxina T4 (µg/dL): Se deben ingresar los niveles de concentración de tiroxina en microgramos por decilitro. Es importante para el análisis funcional del eje tiroideo. 
+- Niveles de la hormona triyodotironina T3 Total (ng/mL): Se deben ingresar los niveles de triyodotironina en sangre en nanogramos por mililitro. Es importante para evaluar el estado funcional de la glándula tiroides. 
+- Niveles de la hormona tiroxina T4 Total (µg/dL): Se deben ingresar los niveles de concentración de tiroxina en microgramos por decilitro. Es importante para el análisis funcional del eje tiroideo. 
 - Tamaño del nódulo (cm): Medida del nódulo tiroideo en centímetros. Los nódulos más grandes pueden tener mayor probabilidad de malignidad. 
 
 ____________________________________________________________________________________
@@ -116,4 +116,5 @@ El resultado del modelo es la probabilidad de malignidad:
 •	Si la probabilidad de malignidad se encuentra superior al 50% el resultado será maligno y se sugiere valoración médica prioritaria, practicar estudios y controles, para descartar si el paciente tiene cáncer de tiroides. 
 •	Si la probabilidad de malignidad es inferior al 50%, el resultado será benigno y no se sugiere biopsia inmediata, sin embargo, debe continuar con sus controles y seguimiento médico. 
  4.	Se obtienen los resultados y la probabilidad de malignidad de acuerdo con las características ingresadas 
+
 
