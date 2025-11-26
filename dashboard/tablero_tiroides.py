@@ -1,8 +1,6 @@
 import streamlit as st
-import joblib
 import numpy as np
-import random
-
+import requests
 
 st.markdown(
     """
@@ -40,50 +38,53 @@ with col3:
     tam_nodulo = st.number_input("Tamaño del nódulo")
 
 if st.button("Analizar riesgo"):
-    model = joblib.load("modelo_tiroides.pkl")
 
-    # Variables del tablero (10 variables)
-    X_user = np.array([
-        edad,
-        t3,
-        tsh,
-        t4,
-        tam_nodulo,
-        1 if sexo=="Masculino" else 0,
-        1 if tabaquismo=="Si" else 0,
-        1 if obesidad=="Si" else 0,
-        1 if antecedentes=="Si" else 0,
-        1 if diabetes=="Si" else 0
-    ])
-
-    # Crear las 15 variables EXACTAS en el orden que el modelo espera
-    # Las faltantes se rellenan en cero
+    # Se genera el vector de 15 características en el orden EXACTO que espera el modelo en la API.
+    # Las variables no preguntadas (Riesgo_Cancer, País, Etnicidad, Yodo) se rellenan con cero.
     X = np.array([
-        edad,               # Edad
-        tsh,                # Nivel_TSH
-        t3,                 # Nivel_T3
-        t4,                 # Nivel_T4
-        tam_nodulo,         # Tamanio_Nodo
-        0,                  # Riesgo_Cancer_Tiroide (asumido 0)
-        1 if sexo=="Masculino" else 0,    # Genero_Masculino
-        0,                  # Pais_India (asumido 0)
-        0,                  # Etnicidad_Asiatico (asumido 0)
-        0,                  # Etnicidad_Caucasico (asumido 0)
-        1 if antecedentes=="Si" else 0,   # Historial_Familiar_Si
-        0,                  # Deficiencia_Vodo_Si (asumido 0)
-        1 if tabaquismo=="Si" else 0,     # Tabaquismo_Si
-        1 if obesidad=="Si" else 0,       # Obesidad_Si
-        1 if diabetes=="Si" else 0        # Diabetes_Si
-    ]).reshape(1,-1)
+        edad,                                  # 1. Edad
+        tsh,                                   # 2. Nivel_TSH
+        t3,                                    # 3. Nivel_T3
+        t4,                                    # 4. Nivel_T4
+        tam_nodulo,                            # 5. Tamanio_Nodo
+        0,                                     # 6. Riesgo_Cancer_Tiroide (Asumido 0)
+        1 if sexo=="Masculino" else 0,         # 7. Genero_Masculino
+        0,                                     # 8. Pais_India (Asumido 0)
+        0,                                     # 9. Etnicidad_Asiatico (Asumido 0)
+        0,                                     # 10. Etnicidad_Caucasico (Asumido 0)
+        1 if antecedentes=="Si" else 0,        # 11. Historial_Familiar_Si
+        0,                                     # 12. Deficiencia_Vodo_Si (Asumido 0)
+        1 if tabaquismo=="Si" else 0,          # 13. Tabaquismo_Si
+        1 if obesidad=="Si" else 0,            # 14. Obesidad_Si
+        1 if diabetes=="Si" else 0             # 15. Diabetes_Si
+    ]).reshape(1,-1) # Se asegura que sea una matriz de 1x15 para el tolist()
 
-    # Predicción
-    prob = model.predict_proba(X)[0][1]
-    resultado = "Maligno" if prob > 0.5 else "Benigno"
+    url_api = "http://98.94.83.51:8001/predict"
 
-    st.write(f"**Resultado:** {resultado}  —  **Probabilidad:** {prob:.2%}")
+    payload = {
+        "features": X.tolist()
+    }
+    
+    # Intentar la conexión y capturar errores de red (e.g., IP incorrecta o caída)
+    try:
+        response = requests.post(url_api, json=X.tolist())
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error de conexión: No se pudo conectar a la API en {url_api}.")
+        st.warning("Verifique que la IP y el puerto 8001 sean correctos para la tarea de la API.")
+        st.stop()
+    
+    # Evaluar la respuesta del servidor (código 200 vs. errores 4xx/5xx)
+    if response.status_code == 200:
+        prob = response.json()["probabilidad"]
+        resultado = "Maligno" if prob > 0.5 else "Benigno"
 
-    if resultado == "Benigno":
-        st.success("No se requiere biopsia inmediata")
+        st.write(f"**Resultado:** {resultado}  —  **Probabilidad:** {prob:.2%}")
+
+        if resultado == "Benigno":
+            st.success("No se requiere biopsia inmediata")
+        else:
+            st.error("Requiere valoración médica prioritaria")
     else:
-        st.error("Requiere valoración médica prioritaria")
-
+        st.error(f"Error consultando la API: La API respondió con código {response.status_code}.")
+        st.markdown(f"**Mensaje Técnico (JSON):** `{response.text}`")
+        st.warning("Debe revisar los logs de la API en AWS CloudWatch para la causa raíz del error interno.")
