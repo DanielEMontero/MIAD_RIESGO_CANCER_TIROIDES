@@ -58,3 +58,7 @@ Thumbs.db
 ehthumbs.db
 desktop.ini
 
+# ============================
+# ARCHIVOS LOCALES DE MLflow
+# ============================
+mlflow.db

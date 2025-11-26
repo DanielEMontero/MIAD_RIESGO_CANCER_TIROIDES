@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 import joblib
 import numpy as np
+import os # Importar 'os'
+
+# Obtener la ruta del directorio actual donde se encuentra app.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "modelo_tiroides.pkl")
 
 app = FastAPI(
     title="API Predicción Tiroides",
@@ -8,7 +13,8 @@ app = FastAPI(
     version="1.0"
 )
 
-model = joblib.load("modelo_tiroides.pkl")
+# Cargar el modelo usando la ruta absoluta calculada
+model = joblib.load(MODEL_PATH) 
 
 @app.post("/predict")
 def predict(features: list):
